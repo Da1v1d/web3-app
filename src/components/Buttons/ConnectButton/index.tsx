@@ -1,9 +1,17 @@
-'use client';
-import { useAppDispatch } from '@/store';
-import { Button } from '../Button';
-import { connectToWallet } from '@/store/slices/web3Slice';
+"use client";
+import { useAppDispatch } from "@/store";
+import { Button } from "../Button";
+import { connectToWallet } from "@/store/slices/web3Slice";
+import { useLoading } from "@/hooks/useLoading";
 
 export const ConnectButton = () => {
   const dispatch = useAppDispatch();
-  return <Button onClick={() => dispatch(connectToWallet())} text='connect' />;
+  const { isLoading, handleChangeLoading } = useLoading();
+
+  const connect = async () => {
+    handleChangeLoading();
+    await connectToWallet();
+    
+  };
+  return <Button onClick={() => dispatch(connectToWallet())} text="connect" />;
 };

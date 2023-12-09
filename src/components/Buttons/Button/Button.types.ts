@@ -1,7 +1,6 @@
-import { ActionCreatorWithPayload } from '@reduxjs/toolkit';
-import { MouseEventHandler } from 'react';
+import { MouseEventHandler } from "react";
 
 export interface IButton {
-  onClick: any;
+  onClick: MouseEventHandler<HTMLButtonElement>;
   text: string;
 }

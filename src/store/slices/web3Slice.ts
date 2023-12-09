@@ -1,24 +1,30 @@
-import { connectWallet, getBalance } from '@/utils/web3';
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { connectWallet, getBalance } from "@/utils/web3";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-interface IWeb3 {
+interface Web3 {
   address: string | null;
   balance: string | null;
+  error: Error | null;
 }
 
-const initialState: IWeb3 = { address: null, balance: null };
+const initialState: Web3 = { address: null, balance: null, error: null };
 
 export const connectToWallet = createAsyncThunk(
-  'wallet/connectAsync',
+  "wallet/connectAsync",
   async () => {
-    const [account] = await connectWallet();
-    localStorage.setItem('account', account);
-    return account;
+    try {
+      const [account] = await connectWallet();
+      localStorage.setItem("account", account);
+      getWalletBalance(account);
+      return account;
+    } catch (error) {
+      return error;
+    }
   }
 );
 
 export const getWalletBalance = createAsyncThunk(
-  'wallet/getBalance',
+  "wallet/getBalance",
   async (account: string) => {
     const balance = await getBalance(account);
     return balance;
@@ -26,7 +32,7 @@ export const getWalletBalance = createAsyncThunk(
 );
 
 const web3Slice = createSlice({
-  name: 'web3',
+  name: "web3",
   initialState,
   reducers: {
     // incrementByAmount(state, action: PayloadAction<number>) {
@@ -36,6 +42,9 @@ const web3Slice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(connectToWallet.fulfilled, (state, action) => {
       state.address = action.payload;
+    });
+    builder.addCase(connectToWallet.rejected, (state, action) => {
+      state.error = action.payload;
     });
     builder.addCase(getWalletBalance.fulfilled, (state, action) => {
       state.balance = action.payload;

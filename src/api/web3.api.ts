@@ -20,7 +20,3 @@ export const getBalance: (account: string) => Promise<string> = async (
     params: [account, "latest"],
   });
 };
-
-export const parseWei: (a: string) => string = (a: string) => {
-  return (parseInt(a as string) / 10 ** 18).toFixed(4);
-};
