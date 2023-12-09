@@ -13,6 +13,7 @@ export const connectToWallet = createAsyncThunk(
   async () => {
     const [account] = await connectWallet();
     localStorage.setItem('account', account);
+    getWalletBalance(account);
     return account;
   }
 );
